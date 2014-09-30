@@ -1,0 +1,42 @@
+# Temporary Python files
+*.pyc
+*.egg-info
+__pycache__
+
+# Temporary OS files
+Icon*
+
+# Temporary virtualenv files
+.cache
+env
+
+# Makefile flags
+.specs_check
+.specs_check_FL
+.specs_check_SYSRS
+.specs_check_CLHLR
+.specs_check_HWHLR
+.specs_check_MEHLR
+.specs_check_SWHLR
+
+# Generated documentation
+*.gen.*
+docs
+*.rst
+tmp
+specs/html
+
+# Google Drive
+*.gdoc
+*.gsheet
+*.gslides
+*.gdraw
+
+# Testing and coverage results
+.coverage
+
+# Build and release directories
+specs-release
+
+# Sublime Text
+*.sublime-workspace
