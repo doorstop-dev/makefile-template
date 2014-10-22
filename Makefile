@@ -1,7 +1,10 @@
 # Project settings
-PRJ_DIR := prj_dir      # Replace directory with a common distrobution point for the team
-SPECS_NAME := PRJ-Specs # Replace with a customer-specific PRJ name
-SPECS := specs          # Default "template" location of specifications
+## Replace directory with a common distrobution point for the team
+PRJ_DIR := prj_dir
+## Replace with a customer-specific PRJ name
+SPECS_NAME := PRJ-Specs
+## Default "template" location of specifications
+SPECS := specs
 
 # virtualenv settings
 ENV := env
