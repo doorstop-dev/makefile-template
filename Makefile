@@ -12,7 +12,6 @@ DEPENDS_DEV := $(ENV)/.depends-dev
 ALL := $(ENV)/.all
 
 # Flags for targest ... modify for your project
-SPECS_CHECK := $(SPECS)/.specs_check
 SPECS_CHECK_FL := $(SPECS)/.specs_check_FL
 SPECS_CHECK_SYSRS := $(SPECS)/.specs_check_SYSRS
 SPECS_CHECK_CLHLR := $(SPECS)/.specs_check_CLHLR
@@ -34,6 +33,7 @@ ifeq ($(OS),Windows_NT)
 	SYS_VIRTUALENV := C:\\Python33\\Scripts\\virtualenv.exe
 	BIN := $(ENV)/Scripts
 	OPEN := cmd /c start
+	FIND := C:\\cygwin\\bin\\find.exe
 	# https://bugs.launchpad.net/virtualenv/+bug/449537
 	export TCL_LIBRARY=C:\\Python33\\tcl\\tcl8.5
 else
@@ -42,8 +42,10 @@ else
 	BIN := $(ENV)/bin
 	ifneq ($(findstring cygwin, $(PLATFORM)), )
 		OPEN := cygstart
+		FIND := find
 	else
 		OPEN := open
+		FIND := find
 	endif
 endif
 
@@ -82,7 +84,8 @@ depends: .depends-ci .depends-dev
 $(DEPENDS_CI): Makefile
 	- $(PIP) uninstall doorstop --yes
 	# $(PIP) install --upgrade doorstop # install released
-	$(PIP) install https://github.com/jacebrowning/doorstop/archive/master.zip # install master-dev
+	# $(PIP) install https://github.com/jacebrowning/doorstop/archive/master.zip # install master-release
+	$(PIP) install https://github.com/jacebrowning/doorstop/archive/develop.zip # install master-dev
 	# $(PIP) install https://github.com/jacebrowning/doorstop/archive/f5ee2b9dc1e3bb4483d9b582a86842b227074a81.zip # install test-hash
 	touch $(DEPENDS_CI)  # flag to indicate dependencies are installed
 
@@ -96,7 +99,7 @@ $(DEPENDS_DEV): Makefile
 
 .PHONY: specs
 specs: .depends-ci docs/html/index.html
-docs/html/index.html: $(shell find $(SPECS) -name '*.yml')
+docs/html/index.html: $(shell $(FIND) specs -name '*.yml')
 	rm -rf docs/html
 	$(DOORSTOP) publish all docs/html --no-body-levels
 
@@ -123,36 +126,34 @@ read: doc
 reqcheck: doorstop
 
 .PHONY: doorstop
-doorstop: .depends-ci $(SPECS_CHECK)
-$(SPECS_CHECK): $(SPECS)/__version__.py $(shell find $(SPECS) -name '*.yml')
+doorstop: .depends-ci
 	$(DOORSTOP) --no-level-check
-	touch $(SPECS_CHECK)
 
 # Worker Scripts #############################################################
 
 .PHONY: excel-export
 excel-export: .depends-ci $(SPECS_CHECK_FL) $(SPECS_CHECK_SYSRS) $(SPECS_CHECK_CLHLR) $(SPECS_CHECK_HWHLR) $(SPECS_CHECK_MEHLR) $(SPECS_CHECK_SWHLR)
-$(SPECS_CHECK_FL): $(shell find $(SPECS)/FeatureList -name '*.yml')
+$(SPECS_CHECK_FL): $(shell $(FIND) $(SPECS)/FeatureList -name '*.yml')
 	$(DOORSTOP) export FL tmp/FL.xlsx --xlsx
 	touch $(SPECS_CHECK_FL)
 	touch $(EXCEL_CHECK_FL)
-$(SPECS_CHECK_SYSRS): $(shell find $(SPECS)/SYSRS -name '*.yml')
+$(SPECS_CHECK_SYSRS): $(shell $(FIND) $(SPECS)/SYSRS -name '*.yml')
 	$(DOORSTOP) export SYSRS tmp/SYSRS.xlsx --xlsx
 	touch $(SPECS_CHECK_SYSRS)
 	touch $(EXCEL_CHECK_SYSRS)
-$(SPECS_CHECK_CLHLR): $(shell find $(SPECS)/CLRS -name '*.yml')
+$(SPECS_CHECK_CLHLR): $(shell $(FIND) $(SPECS)/CLRS -name '*.yml')
 	$(DOORSTOP) export CLHLR tmp/CLHLR.xlsx --xlsx
 	touch $(SPECS_CHECK_CLHLR)
 	touch $(EXCEL_CHECK_CLHLR)
-$(SPECS_CHECK_HWHLR): $(shell find $(SPECS)/HWRS -name '*.yml')
+$(SPECS_CHECK_HWHLR): $(shell $(FIND) $(SPECS)/HWRS -name '*.yml')
 	$(DOORSTOP) export HWHLR tmp/HWHLR.xlsx --xlsx
 	touch $(SPECS_CHECK_HWHLR)
 	touch $(EXCEL_CHECK_HWHLR)
-$(SPECS_CHECK_MEHLR): $(shell find $(SPECS)/MERS -name '*.yml')
+$(SPECS_CHECK_MEHLR): $(shell $(FIND) $(SPECS)/MERS -name '*.yml')
 	$(DOORSTOP) export MEHLR tmp/MEHLR.xlsx --xlsx
 	touch $(SPECS_CHECK_MEHLR)
 	touch $(EXCEL_CHECK_MEHLR)
-$(SPECS_CHECK_SWHLR): $(shell find $(SPECS)/SWRS -name '*.yml')
+$(SPECS_CHECK_SWHLR): $(shell $(FIND) $(SPECS)/SWRS -name '*.yml')
 	$(DOORSTOP) export SWHLR tmp/SWHLR.xlsx --xlsx
 	touch $(SPECS_CHECK_SWHLR)
 	touch $(EXCEL_CHECK_SWHLR)
