@@ -208,6 +208,16 @@ clean-all: clean .clean-env
 
 # Release ####################################################################
 
+.PHONY: .prj_dir-exists
+.prj_dir-exists:
+	@if [ -d "$(PRJ_DIR)" ];         \
+	then                                          \
+		echo Project Directory exists...;        \
+	else                                          \
+		echo ERROR: Project Directory does NOT exists!;   \
+		exit -1;                                  \
+	fi;
+
 .PHONY: .git-no-changes
 .git-no-changes:
 	@if git diff --name-only --exit-code;         \
@@ -220,7 +230,7 @@ clean-all: clean .clean-env
 	fi;
 
 .PHONY: live
-live: .git-no-changes reqcheck doc
+live: .prj_dir-exists .git-no-changes reqcheck doc
 	rm -fr $(PRJ_DIR)/tmp-specs
 	cp -fr docs $(PRJ_DIR)/tmp-specs
 	rm -fr $(PRJ_DIR)/Specifications
