@@ -3,8 +3,6 @@
 PRJ_DIR := prj_dir
 ## Replace with a customer-specific PRJ name
 SPECS_NAME := PRJ-Specs
-## Default "template" location of specifications
-SPECS := specs
 
 # virtualenv settings
 ENV := env
@@ -15,18 +13,18 @@ DEPENDS_DEV := $(ENV)/.depends-dev
 ALL := $(ENV)/.all
 
 # Flags for targest ... modify for your project
-SPECS_CHECK_FL := $(SPECS)/.specs_check_FL
-SPECS_CHECK_SYSRS := $(SPECS)/.specs_check_SYSRS
-SPECS_CHECK_CLHLR := $(SPECS)/.specs_check_CLHLR
-SPECS_CHECK_HWHLR := $(SPECS)/.specs_check_HWHLR
-SPECS_CHECK_MEHLR := $(SPECS)/.specs_check_MEHLR
-SPECS_CHECK_SWHLR := $(SPECS)/.specs_check_SWHLR
-EXCEL_CHECK_FL := tmp/.excel_check_FL
-EXCEL_CHECK_SYSRS := tmp/.excel_check_SYSRS
-EXCEL_CHECK_CLHLR := tmp/.excel_check_CLHLR
-EXCEL_CHECK_HWHLR := tmp/.excel_check_HWHLR
-EXCEL_CHECK_MEHLR := tmp/.excel_check_MEHLR
-EXCEL_CHECK_SWHLR := tmp/.excel_check_SWHLR
+SPECS_CHECK_FL := specs/.specs_check_FL
+SPECS_CHECK_SYSRS := specs/.specs_check_SYSRS
+SPECS_CHECK_CLHLR := specs/.specs_check_CLHLR
+SPECS_CHECK_HWHLR := specs/.specs_check_HWHLR
+SPECS_CHECK_MEHLR := specs/.specs_check_MEHLR
+SPECS_CHECK_SWHLR := specs/.specs_check_SWHLR
+EXCEL_CHECK_FL := xlsx/.excel_check_FL
+EXCEL_CHECK_SYSRS := xlsx/.excel_check_SYSRS
+EXCEL_CHECK_CLHLR := xlsx/.excel_check_CLHLR
+EXCEL_CHECK_HWHLR := xlsx/.excel_check_HWHLR
+EXCEL_CHECK_MEHLR := xlsx/.excel_check_MEHLR
+EXCEL_CHECK_SWHLR := xlsx/.excel_check_SWHLR
 
 
 # OS-specific paths (detected automatically from the system Python)
@@ -60,7 +58,7 @@ RST2HTML := $(PYTHON) $(BIN)/rst2html.py
 PDOC := $(PYTHON) $(BIN)/pdoc
 DOORSTOP := $(BIN)/doorstop
 
-VERSION := $(shell python $(SPECS)/__version__.py)
+VERSION := $(shell python specs/__version__.py)
 
 # Main Targets ###############################################################
 
@@ -86,10 +84,19 @@ depends: .depends-ci .depends-dev
 .depends-ci: env Makefile $(DEPENDS_CI)
 $(DEPENDS_CI): Makefile
 	- $(PIP) uninstall doorstop --yes
-	# $(PIP) install --upgrade doorstop # install released
-	# $(PIP) install https://github.com/jacebrowning/doorstop/archive/master.zip # install master-release
-	$(PIP) install https://github.com/jacebrowning/doorstop/archive/develop.zip # install master-dev
-	# $(PIP) install https://github.com/jacebrowning/doorstop/archive/f5ee2b9dc1e3bb4483d9b582a86842b227074a81.zip # install test-hash
+	#=======================
+	# install released
+	# $(PIP) install --upgrade doorstop
+	#=======================
+	# install master-release
+	# $(PIP) install https://github.com/jacebrowning/doorstop/archive/master.zip
+	#=======================
+	# install master-dev
+	$(PIP) install https://github.com/jacebrowning/doorstop/archive/develop.zip
+	#=======================
+	# install test-hash
+	# $(PIP) install https://github.com/jacebrowning/doorstop/archive/f5ee2b9dc1e3bb4483d9b582a86842b227074a81.zip
+	#=======================
 	touch $(DEPENDS_CI)  # flag to indicate dependencies are installed
 
 .PHONY: .depends-dev
@@ -120,8 +127,8 @@ doc: specs readme
 
 .PHONY: read
 read: doc
-	$(OPEN) docs/html/index.html
 	$(OPEN) docs/README-github.html
+	$(OPEN) docs/html/index.html
 
 # Static Analysis ############################################################
 
@@ -130,56 +137,61 @@ reqcheck: doorstop
 
 .PHONY: doorstop
 doorstop: .depends-ci
+	# ====================================
+	# Implement during initial development ... displays WARNING's
 	$(DOORSTOP) --no-level-check
+	# ====================================
+	# Implement during maintenance and formal change control ... WARNING's cause ERROR's
+	# $(DOORSTOP) --no-level-check --error-all
 
 # Worker Scripts #############################################################
 
 .PHONY: excel-export
 excel-export: .depends-ci $(SPECS_CHECK_FL) $(SPECS_CHECK_SYSRS) $(SPECS_CHECK_CLHLR) $(SPECS_CHECK_HWHLR) $(SPECS_CHECK_MEHLR) $(SPECS_CHECK_SWHLR)
-$(SPECS_CHECK_FL): $(shell $(FIND) $(SPECS)/FeatureList -name '*.yml')
-	$(DOORSTOP) export FL tmp/FL.xlsx --xlsx
+$(SPECS_CHECK_FL): $(shell $(FIND) specs/FeatureList -name '*.yml')
+	$(DOORSTOP) export FL xlsx/FL.xlsx --xlsx
 	touch $(SPECS_CHECK_FL)
 	touch $(EXCEL_CHECK_FL)
-$(SPECS_CHECK_SYSRS): $(shell $(FIND) $(SPECS)/SYSRS -name '*.yml')
-	$(DOORSTOP) export SYSRS tmp/SYSRS.xlsx --xlsx
+$(SPECS_CHECK_SYSRS): $(shell $(FIND) specs/SYSRS -name '*.yml')
+	$(DOORSTOP) export SYSRS xlsx/SYSRS.xlsx --xlsx
 	touch $(SPECS_CHECK_SYSRS)
 	touch $(EXCEL_CHECK_SYSRS)
-$(SPECS_CHECK_CLHLR): $(shell $(FIND) $(SPECS)/CLRS -name '*.yml')
-	$(DOORSTOP) export CLHLR tmp/CLHLR.xlsx --xlsx
+$(SPECS_CHECK_CLHLR): $(shell $(FIND) specs/CLRS -name '*.yml')
+	$(DOORSTOP) export CLHLR xlsx/CLHLR.xlsx --xlsx
 	touch $(SPECS_CHECK_CLHLR)
 	touch $(EXCEL_CHECK_CLHLR)
-$(SPECS_CHECK_HWHLR): $(shell $(FIND) $(SPECS)/HWRS -name '*.yml')
-	$(DOORSTOP) export HWHLR tmp/HWHLR.xlsx --xlsx
+$(SPECS_CHECK_HWHLR): $(shell $(FIND) specs/HWRS -name '*.yml')
+	$(DOORSTOP) export HWHLR xlsx/HWHLR.xlsx --xlsx
 	touch $(SPECS_CHECK_HWHLR)
 	touch $(EXCEL_CHECK_HWHLR)
-$(SPECS_CHECK_MEHLR): $(shell $(FIND) $(SPECS)/MERS -name '*.yml')
-	$(DOORSTOP) export MEHLR tmp/MEHLR.xlsx --xlsx
+$(SPECS_CHECK_MEHLR): $(shell $(FIND) specs/MERS -name '*.yml')
+	$(DOORSTOP) export MEHLR xlsx/MEHLR.xlsx --xlsx
 	touch $(SPECS_CHECK_MEHLR)
 	touch $(EXCEL_CHECK_MEHLR)
-$(SPECS_CHECK_SWHLR): $(shell $(FIND) $(SPECS)/SWRS -name '*.yml')
-	$(DOORSTOP) export SWHLR tmp/SWHLR.xlsx --xlsx
+$(SPECS_CHECK_SWHLR): $(shell $(FIND) specs/SWRS -name '*.yml')
+	$(DOORSTOP) export SWHLR xlsx/SWHLR.xlsx --xlsx
 	touch $(SPECS_CHECK_SWHLR)
 	touch $(EXCEL_CHECK_SWHLR)
 
 .PHONY: excel-import
 excel-import: .depends-ci $(EXCEL_CHECK_FL) $(EXCEL_CHECK_SYSRS) $(EXCEL_CHECK_CLHLR) $(EXCEL_CHECK_HWHLR) $(EXCEL_CHECK_MEHLR) $(EXCEL_CHECK_SWHLR)
-$(EXCEL_CHECK_FL): tmp/FL.xlsx
-	$(DOORSTOP) import tmp/FL.xlsx FL
+$(EXCEL_CHECK_FL): xlsx/FL.xlsx
+	$(DOORSTOP) import xlsx/FL.xlsx FL
 	touch $(EXCEL_CHECK_FL)
-$(EXCEL_CHECK_SYSRS): tmp/SYSRS.xlsx
-	$(DOORSTOP) import tmp/SYSRS.xlsx SYSRS
+$(EXCEL_CHECK_SYSRS): xlsx/SYSRS.xlsx
+	$(DOORSTOP) import xlsx/SYSRS.xlsx SYSRS
 	touch $(EXCEL_CHECK_SYSRS)
-$(EXCEL_CHECK_CLHLR): tmp/CLHLR.xlsx
-	$(DOORSTOP) import tmp/CLHLR.xlsx CLHLR
+$(EXCEL_CHECK_CLHLR): xlsx/CLHLR.xlsx
+	$(DOORSTOP) import xlsx/CLHLR.xlsx CLHLR
 	touch $(EXCEL_CHECK_CLHLR)
-$(EXCEL_CHECK_HWHLR): tmp/HWHLR.xlsx
-	$(DOORSTOP) import tmp/HWHLR.xlsx HWHLR
+$(EXCEL_CHECK_HWHLR): xlsx/HWHLR.xlsx
+	$(DOORSTOP) import xlsx/HWHLR.xlsx HWHLR
 	touch $(EXCEL_CHECK_HWHLR)
-$(EXCEL_CHECK_MEHLR): tmp/MEHLR.xlsx
-	$(DOORSTOP) import tmp/MEHLR.xlsx MEHLR
+$(EXCEL_CHECK_MEHLR): xlsx/MEHLR.xlsx
+	$(DOORSTOP) import xlsx/MEHLR.xlsx MEHLR
 	touch $(EXCEL_CHECK_MEHLR)
-$(EXCEL_CHECK_SWHLR): tmp/SWHLR.xlsx
-	$(DOORSTOP) import tmp/SWHLR.xlsx SWHLR
+$(EXCEL_CHECK_SWHLR): xlsx/SWHLR.xlsx
+	$(DOORSTOP) import xlsx/SWHLR.xlsx SWHLR
 	touch $(EXCEL_CHECK_SWHLR)
 
 # Testing ####################################################################
@@ -200,7 +212,7 @@ clean-all: clean .clean-env
 
 .PHONY: .clean-doc
 .clean-doc:
-	rm -rf docs README.rst $(SPECS)/.specs_check* tmp
+	rm -rf docs README.rst specs/.specs_check* xlsx
 
 .PHONY: .clean-specs-release
 .clean-specs-release:
@@ -230,17 +242,25 @@ clean-all: clean .clean-env
 	fi;
 
 .PHONY: live
-live: .prj_dir-exists .git-no-changes reqcheck doc
+live: .prj_dir-exists .git-no-changes reqcheck excel-export doc
+	#=========================
+	# Shared Project Directory
 	rm -fr $(PRJ_DIR)/tmp-specs
 	cp -fr docs $(PRJ_DIR)/tmp-specs
+	cp -f xlsx/CM-*.xlsx $(PRJ_DIR)/tmp-specs
 	rm -fr $(PRJ_DIR)/Specifications
 	mv -f $(PRJ_DIR)/tmp-specs $(PRJ_DIR)/Specifications
+	#=========================
+	# Google-Drive/Dropbox Directory
+	# cp -fr docs/* $(PRJ_DIR)/Specifications
+	# cp -f xlsx/CM-*.xlsx $(PRJ_DIR)/Specifications
+
 
 .PHONY: specs-release
-specs-release: .git-no-changes reqcheck specs
-	rm -fr specs-release/specs
+specs-release: .git-no-changes reqcheck excel-export doc
 	mkdir -p specs-release
-	zip -rv specs-release/$(SPECS_NAME)-$(VERSION).zip docs/html -i "*.html"
+	zip -rv specs-release/$(SPECS_NAME)-$(VERSION).zip docs -i *.html
+	zip -v specs-release/$(SPECS_NAME)-$(VERSION).zip xlsx -i *.xlsx
 
 .PHONY: release
 release: specs-release

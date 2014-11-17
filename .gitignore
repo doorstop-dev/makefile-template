@@ -23,7 +23,7 @@ env
 *.gen.*
 docs
 *.rst
-tmp
+xlsx
 specs/html
 
 # Google Drive
