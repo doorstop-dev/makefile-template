@@ -58,7 +58,7 @@ RST2HTML := $(PYTHON) $(BIN)/rst2html.py
 PDOC := $(PYTHON) $(BIN)/pdoc
 DOORSTOP := $(BIN)/doorstop
 
-VERSION := $(shell python specs/__version__.py)
+VERSION := $(shell python __version__.py)
 
 # Main Targets ###############################################################
 

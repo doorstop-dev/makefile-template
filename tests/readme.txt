@@ -1,0 +1,1 @@
+this folder is used to store test plan, report and artifacts
