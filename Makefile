@@ -201,7 +201,7 @@ $(EXCEL_CHECK_SWHLR): xlsx/SWHLR.xlsx
 # Cleanup ####################################################################
 
 .PHONY: clean
-clean: .clean-doc .clean-specs-release
+clean: .clean-doc .clean-zips
 	rm -rf $(ALL)
 
 .PHONY: clean-all
@@ -215,9 +215,9 @@ clean-all: clean .clean-env
 .clean-doc:
 	rm -rf docs README.rst specs/.specs_check* xlsx
 
-.PHONY: .clean-specs-release
-.clean-specs-release:
-	rm -rf specs-release
+.PHONY: .clean-zips
+.clean-zips:
+	rm -rf zips
 
 # Release ####################################################################
 
@@ -261,17 +261,17 @@ live: .prj_dir-exists .git-no-changes reqcheck excel-export doc
 	# cp -fr tests/$(BRANCH)/* $(PRJ_DIR)/$(BRANCH)/Tests
 
 
-.PHONY: specs-release
-specs-release: .git-no-changes reqcheck excel-export doc
-	mkdir -p specs-release
-	zip -rv specs-release/$(PRJ_NAME)-Specs-$(VERSION).zip docs -i *.html
-	zip -v specs-release/$(PRJ_NAME)-Specs-$(VERSION).zip xlsx -i *.xlsx
-	zip -v specs-release/$(PRJ_NAME)-Design-$(VERSION).zip design
-	zip -v specs-release/$(PRJ_NAME)-Tests-$(VERSION).zip tests/$(BRANCH)
-	zip -v specs-release/$(PRJ_NAME)-Reviews-$(VERSION).zip reviews
+.PHONY: zips
+zips: .git-no-changes reqcheck excel-export doc
+	mkdir -p zips
+	zip -rv zips/$(PRJ_NAME)-Specs-$(VERSION).zip docs -i *.html
+	zip -v zips/$(PRJ_NAME)-Specs-$(VERSION).zip xlsx/* -i *.xlsx
+	zip -rv zips/$(PRJ_NAME)-Design-$(VERSION).zip design
+	zip -rv zips/$(PRJ_NAME)-Tests-$(VERSION).zip tests/$(BRANCH)
+	zip -rv zips/$(PRJ_NAME)-Reviews-$(VERSION).zip reviews
 
 .PHONY: release
-release: specs-release
+release: zips
 	git tag -a $(VERSION) -m '"Release of version $(VERSION)"'
 	git push --tags
 
