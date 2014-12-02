@@ -2,7 +2,7 @@
 ## Replace directory with a common distrobution point for the team
 PRJ_DIR := prj_dir
 ## Replace with a customer-specific PRJ name
-SPECS_NAME := PRJ-Specs
+PRJ_NAME := prj_name
 
 # virtualenv settings
 ENV := env
@@ -59,6 +59,7 @@ PDOC := $(PYTHON) $(BIN)/pdoc
 DOORSTOP := $(BIN)/doorstop
 
 VERSION := $(shell python __version__.py)
+BRANCH := $(shell git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 
 # Main Targets ###############################################################
 
@@ -245,22 +246,29 @@ clean-all: clean .clean-env
 live: .prj_dir-exists .git-no-changes reqcheck excel-export doc
 	#=========================
 	# Shared Project Directory
-	rm -fr $(PRJ_DIR)/tmp-specs
-	cp -fr docs $(PRJ_DIR)/tmp-specs
-	cp -f xlsx/CM-*.xlsx $(PRJ_DIR)/tmp-specs
-	rm -fr $(PRJ_DIR)/Specifications
-	mv -f $(PRJ_DIR)/tmp-specs $(PRJ_DIR)/Specifications
+	rm -fr $(PRJ_DIR)/tmp-specs-$(BRANCH)
+	mkdir $(PRJ_DIR)/tmp-specs-$(BRANCH)
+	cp -fr docs $(PRJ_DIR)/tmp-specs-$(BRANCH)
+	cp -f xlsx/*.xlsx $(PRJ_DIR)/tmp-specs-$(BRANCH)
+	rm -fr $(PRJ_DIR)/Specifications-$(BRANCH)
+	mv -f $(PRJ_DIR)/tmp-specs-$(BRANCH) $(PRJ_DIR)/Specifications-$(BRANCH)
 	#=========================
 	# Google-Drive/Dropbox Directory
-	# cp -fr docs/* $(PRJ_DIR)/Specifications
-	# cp -f xlsx/CM-*.xlsx $(PRJ_DIR)/Specifications
+	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Specs
+	# mkdir -p $(PRJ_DIR)/$(BRANCH)/DVPnR
+	# cp -fr docs/* $(PRJ_DIR)/$(BRANCH)/Specs
+	# cp -f xlsx/*.xlsx $(PRJ_DIR)/$(BRANCH)/Specs
+	# cp -fr tests/$(BRANCH)/* $(PRJ_DIR)/$(BRANCH)/Tests
 
 
 .PHONY: specs-release
 specs-release: .git-no-changes reqcheck excel-export doc
 	mkdir -p specs-release
-	zip -rv specs-release/$(SPECS_NAME)-$(VERSION).zip docs -i *.html
-	zip -v specs-release/$(SPECS_NAME)-$(VERSION).zip xlsx -i *.xlsx
+	zip -rv specs-release/$(PRJ_NAME)-Specs-$(VERSION).zip docs -i *.html
+	zip -v specs-release/$(PRJ_NAME)-Specs-$(VERSION).zip xlsx -i *.xlsx
+	zip -v specs-release/$(PRJ_NAME)-Design-$(VERSION).zip design
+	zip -v specs-release/$(PRJ_NAME)-Tests-$(VERSION).zip tests/$(BRANCH)
+	zip -v specs-release/$(PRJ_NAME)-Reviews-$(VERSION).zip reviews
 
 .PHONY: release
 release: specs-release
