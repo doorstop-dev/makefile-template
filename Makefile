@@ -136,7 +136,7 @@ read: doc
 # Static Analysis ############################################################
 
 .PHONY: reqcheck
-reqcheck: doorstop
+reqcheck: doorstop .git-no-changes
 
 .PHONY: doorstop
 doorstop: .depends-ci
@@ -235,10 +235,11 @@ clean-all: clean .clean-env
 
 .PHONY: .git-no-changes
 .git-no-changes:
-	@if git diff --name-only --exit-code;         \
+	@if git diff-index --name-status --exit-code HEAD;          \
 	then                                          \
 		echo Git working copy is clean...;        \
 	else                                          \
+		echo ;                                    \
 		echo ERROR: Git working copy is dirty!;   \
 		echo Commit your changes and try again.;  \
 		exit -1;                                  \
