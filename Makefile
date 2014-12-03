@@ -60,6 +60,7 @@ DOORSTOP := $(BIN)/doorstop
 
 VERSION := $(shell python __version__.py)
 BRANCH := $(shell git rev-parse --symbolic-full-name --abbrev-ref HEAD)
+HASH := $(shell git rev-parse --short=8 HEAD)
 
 # Main Targets ###############################################################
 
@@ -250,28 +251,40 @@ live: .prj_dir-exists .git-no-changes reqcheck excel-export doc
 	mkdir $(PRJ_DIR)/tmp-specs-$(BRANCH)
 	cp -fr docs $(PRJ_DIR)/tmp-specs-$(BRANCH)
 	cp -f xlsx/*.xlsx $(PRJ_DIR)/tmp-specs-$(BRANCH)
+	cp -fr tests $(PRJ_DIR)/tmp-specs-$(BRANCH)
+	cp -fr design $(PRJ_DIR)/tmp-specs-$(BRANCH)
+	cp -fr reviews $(PRJ_DIR)/tmp-specs-$(BRANCH)
 	rm -fr $(PRJ_DIR)/Specifications-$(BRANCH)
-	mv -f $(PRJ_DIR)/tmp-specs-$(BRANCH) $(PRJ_DIR)/Specifications-$(BRANCH)
+	mv -f $(PRJ_DIR)/tmp-specs-$(BRANCH) $(PRJ_DIR)/Documentation-$(BRANCH)
 	#=========================
 	# Google-Drive/Dropbox Directory
 	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Specs
-	# mkdir -p $(PRJ_DIR)/$(BRANCH)/DVPnR
+	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Tests
+	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Design
+	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Reviews
 	# cp -fr docs/* $(PRJ_DIR)/$(BRANCH)/Specs
 	# cp -f xlsx/*.xlsx $(PRJ_DIR)/$(BRANCH)/Specs
 	# cp -fr tests/* $(PRJ_DIR)/$(BRANCH)/Tests
+	# cp -fr design/* $(PRJ_DIR)/$(BRANCH)/Design
+	# cp -fr reviews/* $(PRJ_DIR)/$(BRANCH)/Reviews
 
 
 .PHONY: zips
 zips: .git-no-changes reqcheck excel-export doc
 	mkdir -p zips
-	zip -rv zips/$(PRJ_NAME)-Specs-$(VERSION).zip docs -i *.html
-	zip -v zips/$(PRJ_NAME)-Specs-$(VERSION).zip xlsx/* -i *.xlsx
-	zip -rv zips/$(PRJ_NAME)-Design-$(VERSION).zip design
-	zip -rv zips/$(PRJ_NAME)-Tests-$(VERSION).zip tests
-	zip -rv zips/$(PRJ_NAME)-Reviews-$(VERSION).zip reviews
+	zip -rv zips/$(PRJ_NAME)-Specs-$(BRANCH)-$(VERSION).zip docs -i *.html
+	zip -v zips/$(PRJ_NAME)-Specs-$(BRANCH)-$(VERSION).zip xlsx/* -i *.xlsx
+	zip -rv zips/$(PRJ_NAME)-Design-$(BRANCH)-$(VERSION).zip design
+	zip -rv zips/$(PRJ_NAME)-Tests-$(BRANCH)-$(VERSION).zip tests
+	zip -rv zips/$(PRJ_NAME)-Reviews-$(BRANCH)-$(VERSION).zip reviews
+
+.PHONY: archive
+archive: .git-no-changes
+	mkdir -p specs-release
+	git archive --format zip --output zips/$(PRJ_NAME)-Repo-$(BRANCH)-$(VERSION)-$(HASH).zip $(BRANCH)
 
 .PHONY: release
-release: zips
+release: zips archive
 	git tag -a $(VERSION) -m '"Release of version $(VERSION)"'
 	git push --tags
 
