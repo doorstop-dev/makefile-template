@@ -1,1 +1,1 @@
-this folder is used to store test plan, report and artifacts
+this folder is used to store test plan, report and artifacts ... artifacts should be added to the branch to which the requirements apply, not 'master'

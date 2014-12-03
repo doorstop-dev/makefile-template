@@ -1,1 +1,1 @@
-this folder is used to store each doorstop specification/document
+this folder is used to store each doorstop specification/document ... initial adding/editing of requirements should occur on 'master'. Once feature planning branches are implemented for a specific build, push from 'master' to 'branch' ONLY! Never push back from 'branch' to 'master'. Changes to are specific to the 'branch' should occur on that branch. Changes that affect ALL branches/development should be added to 'master', then pushed to the 'branch'.

@@ -1,1 +1,1 @@
-this folder is used to store review artifacts
+this folder is used to store review artifacts ... artifacts should be added to the branch to which the requirements apply, not 'master'

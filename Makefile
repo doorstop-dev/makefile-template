@@ -258,7 +258,7 @@ live: .prj_dir-exists .git-no-changes reqcheck excel-export doc
 	# mkdir -p $(PRJ_DIR)/$(BRANCH)/DVPnR
 	# cp -fr docs/* $(PRJ_DIR)/$(BRANCH)/Specs
 	# cp -f xlsx/*.xlsx $(PRJ_DIR)/$(BRANCH)/Specs
-	# cp -fr tests/$(BRANCH)/* $(PRJ_DIR)/$(BRANCH)/Tests
+	# cp -fr tests/* $(PRJ_DIR)/$(BRANCH)/Tests
 
 
 .PHONY: zips
@@ -267,7 +267,7 @@ zips: .git-no-changes reqcheck excel-export doc
 	zip -rv zips/$(PRJ_NAME)-Specs-$(VERSION).zip docs -i *.html
 	zip -v zips/$(PRJ_NAME)-Specs-$(VERSION).zip xlsx/* -i *.xlsx
 	zip -rv zips/$(PRJ_NAME)-Design-$(VERSION).zip design
-	zip -rv zips/$(PRJ_NAME)-Tests-$(VERSION).zip tests/$(BRANCH)
+	zip -rv zips/$(PRJ_NAME)-Tests-$(VERSION).zip tests
 	zip -rv zips/$(PRJ_NAME)-Reviews-$(VERSION).zip reviews
 
 .PHONY: release
