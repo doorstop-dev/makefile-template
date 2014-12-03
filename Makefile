@@ -60,7 +60,8 @@ DOORSTOP := $(BIN)/doorstop
 
 VERSION := $(shell python __version__.py)
 BRANCH := $(shell git rev-parse --symbolic-full-name --abbrev-ref HEAD)
-HASH := $(shell git rev-parse --short=8 HEAD)
+HASH := $(shell git rev-parse HEAD)
+HASH8 := $(shell git rev-parse --short=8 HEAD)
 
 # Main Targets ###############################################################
 
@@ -262,11 +263,13 @@ live: .prj_dir-exists .git-no-changes reqcheck excel-export doc
 	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Tests
 	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Design
 	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Reviews
+	# rm -f $(PRJ_DIR)/$(BRANCH)/*.hash
 	# cp -fr docs/* $(PRJ_DIR)/$(BRANCH)/Specs
 	# cp -f xlsx/*.xlsx $(PRJ_DIR)/$(BRANCH)/Specs
 	# cp -fr tests/* $(PRJ_DIR)/$(BRANCH)/Tests
 	# cp -fr design/* $(PRJ_DIR)/$(BRANCH)/Design
 	# cp -fr reviews/* $(PRJ_DIR)/$(BRANCH)/Reviews
+	# touch $(PRJ_DIR)/$(BRANCH)/$(HASH).hash
 
 
 .PHONY: zips
@@ -281,7 +284,7 @@ zips: .git-no-changes reqcheck excel-export doc
 .PHONY: archive
 archive: .git-no-changes
 	mkdir -p specs-release
-	git archive --format zip --output zips/$(PRJ_NAME)-Repo-$(BRANCH)-$(VERSION)-$(HASH).zip $(BRANCH)
+	git archive --format zip --output zips/$(PRJ_NAME)-Repo-$(BRANCH)-$(VERSION)-$(HASH8).zip $(BRANCH)
 
 .PHONY: release
 release: zips archive
