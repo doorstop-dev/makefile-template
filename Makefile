@@ -283,7 +283,7 @@ zips: .git-no-changes reqcheck excel-export doc
 
 .PHONY: archive
 archive: .git-no-changes
-	mkdir -p specs-release
+	mkdir -p zips
 	git archive --format zip --output zips/$(PRJ_NAME)-Repo-$(BRANCH)-$(VERSION)-$(HASH8).zip $(BRANCH)
 
 .PHONY: release
