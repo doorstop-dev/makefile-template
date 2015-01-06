@@ -249,15 +249,19 @@ clean-all: clean .clean-env
 live: .prj_dir-exists .git-no-changes reqcheck excel-export doc
 	#=========================
 	# Shared Project Directory
-	rm -fr $(PRJ_DIR)/tmp-specs-$(BRANCH)
-	mkdir $(PRJ_DIR)/tmp-specs-$(BRANCH)
-	cp -fr docs $(PRJ_DIR)/tmp-specs-$(BRANCH)
-	cp -f xlsx/*.xlsx $(PRJ_DIR)/tmp-specs-$(BRANCH)
-	cp -fr tests $(PRJ_DIR)/tmp-specs-$(BRANCH)
-	cp -fr design $(PRJ_DIR)/tmp-specs-$(BRANCH)
-	cp -fr reviews $(PRJ_DIR)/tmp-specs-$(BRANCH)
-	rm -fr $(PRJ_DIR)/Documentation-$(BRANCH)
-	mv -f $(PRJ_DIR)/tmp-specs-$(BRANCH) $(PRJ_DIR)/Documentation-$(BRANCH)
+	rm -fr $(PRJ_DIR)/tmp-docs-$(BRANCH)
+	mkdir $(PRJ_DIR)/tmp-docs-$(BRANCH)
+	mkdir $(PRJ_DIR)/tmp-docs-$(BRANCH)/xlsx
+	cp -f xlsx/*.xlsx $(PRJ_DIR)/tmp-docs-$(BRANCH)/xlsx
+	cp -fr docs $(PRJ_DIR)/tmp-docs-$(BRANCH)
+	cp -fr tests $(PRJ_DIR)/tmp-docs-$(BRANCH)
+	cp -fr design $(PRJ_DIR)/tmp-docs-$(BRANCH)
+	cp -fr reviews $(PRJ_DIR)/tmp-docs-$(BRANCH)
+	touch $(PRJ_DIR)/tmp-docs-$(BRANCH)/$(HASH).hash
+	rm -fr $(PRJ_DIR)/Documentation/$(BRANCH)
+	mkdir -p $(PRJ_DIR)/Documentation/$(BRANCH)
+	mv $(PRJ_DIR)/tmp-docs-$(BRANCH)/* $(PRJ_DIR)/Documentation/$(BRANCH)
+	rm -fr $(PRJ_DIR)/tmp-docs-$(BRANCH)
 	#=========================
 	# Google-Drive/Dropbox Directory
 	# mkdir -p $(PRJ_DIR)/$(BRANCH)/Specs
