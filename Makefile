@@ -256,7 +256,7 @@ live: .prj_dir-exists .git-no-changes reqcheck excel-export doc
 	cp -fr tests $(PRJ_DIR)/tmp-specs-$(BRANCH)
 	cp -fr design $(PRJ_DIR)/tmp-specs-$(BRANCH)
 	cp -fr reviews $(PRJ_DIR)/tmp-specs-$(BRANCH)
-	rm -fr $(PRJ_DIR)/Specifications-$(BRANCH)
+	rm -fr $(PRJ_DIR)/Documentation-$(BRANCH)
 	mv -f $(PRJ_DIR)/tmp-specs-$(BRANCH) $(PRJ_DIR)/Documentation-$(BRANCH)
 	#=========================
 	# Google-Drive/Dropbox Directory
