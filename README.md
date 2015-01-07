@@ -2,6 +2,7 @@
 **!! IMPORTANT !!**
 *If this template is used for a customer project, the following note should be included at the top of this file so as to aleart everyone to the sensitivity of this data.*
 
+```
 ---------------------------------------------------------------------------
 
 ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -9,6 +10,7 @@
 ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 ---------------------------------------------------------------------------
+```
 
 [Customer] - [Project] - Requirements Management
 =======================================================
