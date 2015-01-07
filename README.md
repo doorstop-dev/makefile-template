@@ -1,12 +1,12 @@
 
 **!! IMPORTANT !!**
-*If this template is used for a customer project, the following note should be included at the top of this file so as to aleart everyone to the sensitivity of this data.*
+*If this template is used for a customer project, the following note should be included at the top of this file (by deleting this note and the code-block characters) so as to aleart everyone to the sensitivity of this data.*
 
 ```
 ---------------------------------------------------------------------------
 
 ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-**NOTE: This repository contains customer data an cannot be made public.**
+**WARNING: This repository contains customer data an cannot be made public.**
 ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 ---------------------------------------------------------------------------
